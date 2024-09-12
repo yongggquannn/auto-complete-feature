@@ -1,33 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/// <reference types="vite-plugin-svgr/client" />
+import './tailwind.css'
+import AutoComplete from './components/AutoComplete'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className='bg-gray-100 flex items-center justify-center w-screen h-screen p-6 text-[24px]'>
+        <div className='bg-white rounded-md max-w-md p-6 shadow-sm'>
+          <div className='flex flex-col items-center justify-center space-y-6'>
+            <div className='flex flex-col items-start overflow-visible text-left w-full'>
+              <label className='text-sm text-gray-500'>Async Search</label>
+              <div className='relative w-full'>
+                <AutoComplete asyncSearch={true} />
+                <p className='mt-2 text-sm text-gray-500'>With description and custom results display</p>
+              </div>
+            </div>
+            <div className='flex flex-col items-start overflow-visible text-left w-full'>
+              <label className='text-sm text-gray-500'>Sync Search</label>
+              <div className='relative w-full'>
+              <AutoComplete asyncSearch={false} />
+                <p className='mt-2 text-sm text-gray-500'>With default display and search on focus</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
