@@ -39,15 +39,16 @@ const Item = forwardRef<
   const id = useId();
 
   // Memoize the change handler to prevent unnecessary re-renders
-  const handleChange = useCallback(
+  const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onCheckChange(value, event.target.checked);
     },
     [onCheckChange, value]
   );
 
+
   return (
-    <label className={`flex items-center justify-between px-4 py-2 text-sm leading-5 cursor-pointer focus:outline-none odd:bg-gray-50 text-gray-600 bg-white hover:bg-blue-100 transition-colors duration-150 ${active ? 'bg-blue-100 odd:bg-blue-100' : ''}`}>
+    <label className={`flex items-center justify-between px-4 py-2 text-sm leading-5 cursor-pointer focus:outline-none text-gray-600 hover:bg-blue-100 transition-colors duration-150 ${active ? 'bg-blue-100 odd:bg-blue-100' : 'bg-white odd:bg-gray-50'}`}>
       {value}
       <input
         ref={ref}
@@ -56,7 +57,7 @@ const Item = forwardRef<
         id={id}
         aria-selected={active}
         checked={checked}
-        onChange={handleChange}
+        onChange={onChange}
         className='outline-none'
         {...rest}
       />
@@ -77,9 +78,10 @@ function asyncSearchMatchingQuery(query: string) {
 
 interface AutoCompleteProps {
   asyncSearch: boolean;
+  multiple: boolean;
 }
 
-function AutoComplete({ asyncSearch }: AutoCompleteProps) {
+function AutoComplete({ asyncSearch, multiple }: AutoCompleteProps) {
   // State management variables
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -115,8 +117,6 @@ function AutoComplete({ asyncSearch }: AutoCompleteProps) {
     listRef,
     activeIndex,
     onNavigate: setActiveIndex,
-    loop: true,
-    allowEscape: true
   });
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
@@ -154,15 +154,24 @@ function AutoComplete({ asyncSearch }: AutoCompleteProps) {
 
   // Handle Checkbox Changes
   const handleCheckChange = useCallback((value: string, checked: boolean) => {
-    setCheckedItems((prev) => ({ ...prev, [value]: checked }));
+    if (multiple) {
+      setCheckedItems((prev) => ({ ...prev, [value]: checked }));
+    } else {
+      setCheckedItems({ [value]: checked });
+    }
   }, []);
 
+  // Handle Keyboard Events
   const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       const currentValue = searchResults[activeIndex ?? -1];
       if (currentValue) {
-        setCheckedItems((prev) => ({ ...prev, [currentValue]: !prev[currentValue] }));
+        if (multiple) {
+          setCheckedItems((prev) => ({ ...prev, [currentValue]: !prev[currentValue] }));
+        } else {
+          setCheckedItems({ [currentValue]: true });
+        }
       }
     }
   }, [activeIndex, searchResults]);
