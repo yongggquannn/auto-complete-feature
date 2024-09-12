@@ -7,3 +7,7 @@
 Rendering option logic is factored in `onInputChange`.
 
 Included props such as `searchResults` to indicate as the filtered options based on the input value, and `checkedItems` to see which checkboxes have been checked to maintain state of checked checkboxes.
+
+## Deployment Website
+
+This is the link for feature: https://auto-complete-feature-yong-quan.vercel.app/
